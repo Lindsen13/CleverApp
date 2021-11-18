@@ -1,36 +1,53 @@
 {% extends "layout.html" %}
-{% block body %}
-<body>
-    <table>
-        <tr>
-          <th>id</th>
-          <th>availability</th>
-        </tr>
-        {% for trigger in triggers %}
-        <tr>
-            <td>{{ trigger[0] }}</td>
-            <td>{{ trigger[1] }}</td>
-        </tr>
-        {% endfor %}
-      </table>
-
-      <table>
-        <tr>
-          <th>id</th>
-          <th>availability_new</th>
-          <th>availability_old</th>
-          <th>processed</th>
-          <th>inserted at</th>
-        </tr>
-        {% for avail in became_available %}
-        <tr>
-            <td>{{ avail[0] }}</td>
-            <td>{{ avail[1] }}</td>
-            <td>{{ avail[2] }}</td>
-            <td>{{ avail[3] }}</td>
-            <td>{{ avail[4] }}</td>
-        </tr>
-        {% endfor %}
-      </table>
-</body>
+{% block content %}
+<div class="table-responsive">
+  <table class="table user-list">
+    <thead>
+      <tr>
+        <th class="text-center"><span>Id</span></th>
+        <th class="text-center"><span>Availability</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <h1 class="text-center">Current Stock Overview</h1>
+      <br>
+      {% for trigger in triggers %}
+      <tr>
+        <td class="text-center">{{ trigger[0] }}<br></td>
+        <td class="text-center">{{ trigger[1] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <table class="table user-list">
+    <thead>
+      <tr>
+        <th class="text-center"><span>Id</span></th>
+        <th class="text-center"><span>Availability New</span></th>
+        <th class="text-center"><span>Availability Old</span></th>
+        <th class="text-center"><span>Processed</span></th>
+        <th class="text-center"><span>Inserted At</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <h1 class="text-center">Current Stock Overview</h1>
+      <br>
+      {% for avail in became_available %}
+      <tr>
+        <td class="text-center">{{ avail[0] }}<br></td>
+        <td class="text-center">{{ avail[1] }}</td>
+        <td class="text-center">{{ avail[2] }}</td>
+        <td class="text-center">
+          {% if avail[3] == 0%}
+          <span class="label label-default ">{{ avail[3] }}</span>
+          {% else %}
+          <span class="label label-success ">{{ avail[3] }}</span>
+          {% endif %}
+        </td>
+        <td class="text-center">{{ avail[4] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}

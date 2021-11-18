@@ -25,7 +25,7 @@ def insights_page(id):
     return render_template('triggers.html', id=id, triggers = triggers)
 
 @app.route('/check_triggers')
-def test():
+def check_triggers():
     triggers = fetch_triggers_for_processing()
     for trigger in triggers:
         process_triggers(trigger[0])

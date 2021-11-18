@@ -1,26 +1,34 @@
 {% extends "layout.html" %}
-{% block body %}
-<body>
-    <form action="{{ url_for('insights_page',id=id) }}", method="post">
-        <label for="fname">Email</label><br>
-        <input type="email" id="email" name="email" value="ivo.lindsen@hotmail.com"><br>
-        <input type="submit" value="Submit">
-      </form> 
+{% block content %}
 
-      <table>
-        <tr>
-          <th>ID</th>
-          <th>Email</th>
-          <th>Inserted At</th>
-        </tr>
-        {% for trigger in triggers %}
-        <tr>
-            <td>{{ trigger[0] }}</td>
-            <td>Anonymous</td>
-            <td>{{ trigger[2] }}</td>
-        </tr>
-        {% endfor %}
-      </table>
 
-</body>
+<div class="table-responsive">
+  <table class="table user-list">
+    <thead>
+      <tr>
+        <th class="text-center"><span>Id</span></th>
+        <th class="text-center"><span>Email</span></th>
+        <th class="text-center"><span>Inserted At</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <div class="text-center">
+        <form action="{{ url_for('insights_page',id=id) }}" , method="post">
+          <label for="fname">Email</label><br>
+          <input type="email" id="email" name="email" value="ivo.lindsen@hotmail.com"><br>
+          <input type="submit" value="Submit">
+        </form>
+      </div>
+      <h1 class="text-center">Current Subscriptions on {{ id }}</h1>
+      <br>
+      {% for trigger in triggers %}
+      <tr>
+        <td class="text-center">{{ trigger[0] }}<br></td>
+        <td class="text-center">Anonymous</td>
+        <td class="text-center">{{ trigger[2] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {% endblock %}

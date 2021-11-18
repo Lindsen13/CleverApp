@@ -1,23 +1,35 @@
 {% extends "layout.html" %}
-{% block body %}
-<body>
-    <table>
-        <tr>
-          <th>ID</th>
-          <th>Address</th>
-          <th>Lat</th>
-          <th>Lon</th>
-          <th>button</th>
-        </tr>
-        {% for address in addresses %}
-        <tr>
-            <td>{{ address[0] }}</td>
-            <td>{{ address[1] }}</td>
-            <td>{{ address[2] }}</td>
-            <td>{{ address[3] }}</td>
-            <td><a href="/{{ address[0] }}">link</a></td>
-        </tr>
-        {% endfor %}
-      </table>
-</body>
+{% block content %}
+<div class="table-responsive">
+    <table class="table user-list">
+        <thead>
+            <tr>
+                <th class="text-center"><span>Id</span></th>
+                <th class="text-center"><span>Address</span></th>
+                <th class="text-center"><span>Lat</span></th>
+                <th class="text-center"><span>Lon</span></th>
+                <th class="text-center"><span>Subscribe</span></th>
+            </tr>
+        </thead>
+        <tbody>
+            <h1 class="text-center">Current Stock Overview</h1>
+            <br>
+            {% for address in addresses %}
+            <tr>
+                <td class="text-center">{{ address[0] }}<br></td>
+                <td class="text-center">{{ address[1] }}</td>
+                <td class="text-center">{{ address[2] }}</td>
+                <td class="text-center">{{ address[3] }}</td>
+                <td class="text-center">
+                    <span class="label label-default "><a href="/{{ address[0] }}">link</a></span>
+                </td>
+            </tr>
+            {% endfor %}
+            
+        </tbody>
+    </table>
+</div>
 {% endblock %}
+
+
+
