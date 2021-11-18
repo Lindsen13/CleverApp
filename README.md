@@ -2,7 +2,8 @@
 
 A Flask app to subscribe to a Clever Charging Station in Denmark. If a spot comes available, a notification is given.
 
-TODO:
+## TODO
+
 * Complete user experience when subscribing
 * Create option to send out emails when a charger becomes available
 * Complete the UI
