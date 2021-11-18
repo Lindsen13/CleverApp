@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+{% block body %}
+<body>
+    <form action="{{ url_for('insights_page',id=id) }}", method="post">
+        <label for="fname">Email</label><br>
+        <input type="email" id="email" name="email" value="ivo.lindsen@hotmail.com"><br>
+        <input type="submit" value="Submit">
+      </form> 
+
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>Email</th>
+          <th>Inserted At</th>
+        </tr>
+        {% for trigger in triggers %}
+        <tr>
+            <td>{{ trigger[0] }}</td>
+            <td>Anonymous</td>
+            <td>{{ trigger[2] }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+
+</body>
+{% endblock %}

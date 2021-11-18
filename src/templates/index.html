@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+{% block body %}
+<body>
+    <table>
+        <tr>
+          <th>ID</th>
+          <th>Address</th>
+          <th>Lat</th>
+          <th>Lon</th>
+          <th>button</th>
+        </tr>
+        {% for address in addresses %}
+        <tr>
+            <td>{{ address[0] }}</td>
+            <td>{{ address[1] }}</td>
+            <td>{{ address[2] }}</td>
+            <td>{{ address[3] }}</td>
+            <td><a href="/{{ address[0] }}">link</a></td>
+        </tr>
+        {% endfor %}
+      </table>
+</body>
+{% endblock %}
