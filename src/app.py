@@ -3,9 +3,9 @@ from db import fetch_addresses, \
     insert_triggers, \
     fetch_triggers, \
     fetch_triggers_for_processing, \
-    insert_availability, \
     fetch_became_available
-import requests
+    
+from functions import process_triggers
 
 app = Flask(__name__)
 app.secret_key = b'MyAmazingSecretForCookies'
@@ -28,23 +28,7 @@ def insights_page(id):
 def test():
     triggers = fetch_triggers_for_processing()
     for trigger in triggers:
-        id = trigger[0]
-        url = f'https://clever-app-prod.firebaseio.com/chargers/v2/availability/{id}.json'
-        output = requests.get(url)
-        if output.status_code == 200:
-            available = 0
-            if output.json() == None:
-                print(f'cant find {id=}')
-                available = 0
-            else:
-                print(output.json()['available'])
-                for type in output.json()['available'].keys():
-                    for speed in ['regular','fast','ultra']:
-                        if output.json()['available'].get(type).get(speed):
-                            available += output.json()['available'].get(type).get(speed)
-                            available = 1
-                            insert_availability(id = id, availability = available)
-            print(available)
+        process_triggers(trigger[0])
     triggers = fetch_triggers_for_processing()
     became_available = fetch_became_available()
     return render_template('test_triggers.html', triggers = triggers, became_available = became_available)

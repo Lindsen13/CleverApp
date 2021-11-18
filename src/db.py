@@ -1,34 +1,4 @@
 import sqlite3
-import requests
-from geopy.geocoders import Nominatim
-import time
-
-def data_fetcher(full=False):
-    geolocator = Nominatim(user_agent="CleverConverter")
-
-    url = 'https://clever-app-prod.firebaseio.com/chargers/v3/locations.json'
-    output = requests.get(url)
-    if output.status_code != 200:
-        raise ValueError(f'Error in fetching data: {output.status_code}')
-    if full:
-        charger_to_parse = list(output.json().keys())
-    else:
-        charger_to_parse = list(output.json().keys())[:3]
-    for id in charger_to_parse:
-        address = str(output.json().get(id).get('address').get('line1')) + ', ' + str(output.json().get(id).get('address').get('line2'))
-        geo_loc = geolocator.geocode(address)
-        if geo_loc:
-            lat, lon = geo_loc.latitude, geo_loc.longitude
-        else:
-            lat, lon = None, None
-        insert_addresses(
-            id = id,
-            address = address,
-            lat = lat,
-            lon = lon
-        )
-        print(f'Inserted id {id}. {address=}, {lat=}, {lon=}')
-        time.sleep(0.5)
 
 def initiate():
     con = sqlite3.connect('database.db')
@@ -146,5 +116,4 @@ def fetch_became_available():
 
 if __name__ == '__main__':
     initiate()
-    data_fetcher(full=False)
     
