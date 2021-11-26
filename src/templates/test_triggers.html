@@ -9,7 +9,7 @@
       </tr>
     </thead>
     <tbody>
-      <h1 class="text-center">Current Stock Overview</h1>
+      <h1 class="text-center">Current Locations to Check</h1>
       <br>
       {% for trigger in triggers %}
       <tr>
@@ -30,7 +30,7 @@
       </tr>
     </thead>
     <tbody>
-      <h1 class="text-center">Current Stock Overview</h1>
+      <h1 class="text-center">Recent changes</h1>
       <br>
       {% for avail in became_available %}
       <tr>
@@ -45,6 +45,34 @@
           {% endif %}
         </td>
         <td class="text-center">{{ avail[4] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <table class="table user-list">
+    <thead>
+      <tr>
+        <th class="text-center"><span>Id</span></th>
+        <th class="text-center"><span>Email</span></th>
+        <th class="text-center"><span>Insterted At</span></th>
+        <th class="text-center"><span>Processed</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <h1 class="text-center">Recently Processed</h1>
+      <br>
+      {% for processed in processed_triggers %}
+      <tr>
+        <td class="text-center">{{ processed[0] }}<br></td>
+        <td class="text-center">{{ processed[1] }}</td>
+        <td class="text-center">{{ processed[2] }}</td>
+        <td class="text-center">
+          {% if processed[3] == 0%}
+          <span class="label label-default ">{{ processed[3] }}</span>
+          {% else %}
+          <span class="label label-success ">{{ processed[3] }}</span>
+          {% endif %}
+        </td>
       </tr>
       {% endfor %}
     </tbody>

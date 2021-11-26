@@ -6,24 +6,28 @@
   <table class="table user-list">
     <thead>
       <tr>
-        <th class="text-center"><span>Id</span></th>
         <th class="text-center"><span>Email</span></th>
-        <th class="text-center"><span>Inserted At</span></th>
+        <th class="text-center"><span>Subscribed At</span></th>
       </tr>
     </thead>
     <tbody>
+      <h1 class="text-center">Subscribe for {{ address[0][1] }}</h1>
+      <p class="text-center">
+        Sign up for {{ address[0][1] }} by entering your email. When a spot comes available, you will 
+        recieve an email.</br>
+        We will remove your entry afterwards, feel free to sign up again if you missed it or if you need a spot again!
+      </p>
       <div class="text-center">
-        <form action="{{ url_for('insights_page',id=id) }}" , method="post">
-          <label for="fname">Email</label><br>
-          <input type="email" id="email" name="email" value="ivo.lindsen@hotmail.com"><br>
+        <form action="{{ url_for('insights_page',id=id) }}", method="post">
+          <label for="email">Email</label><br>
+          <input type="email" class="form-control" id="email" name="email" placeholder="Email" required><br>
           <input type="submit" value="Submit">
         </form>
       </div>
-      <h1 class="text-center">Current Subscriptions on {{ id }}</h1>
+      <h3 class="text-center">Current Subscriptions for this charger in last 24 hours</h3>
       <br>
       {% for trigger in triggers %}
       <tr>
-        <td class="text-center">{{ trigger[0] }}<br></td>
         <td class="text-center">Anonymous</td>
         <td class="text-center">{{ trigger[2] }}</td>
       </tr>

@@ -6,14 +6,13 @@ def initiate():
     cur.execute("""
         CREATE TABLE IF NOT EXISTS addresses (
             id INTEGER PRIMARY KEY, 
-            address TEXT NOT NULL, 
-            lat REAL, 
-            lon REAL)
+            address TEXT NOT NULL)
     """)
     cur.execute("""
         CREATE TABLE IF NOT EXISTS triggers (
             id INTEGER NOT NULL, 
             email TEXT NOT NULL, 
+            processed BOOLEAN DEFAULT FALSE,
             inserted_at timestamp DEFAULT CURRENT_TIMESTAMP)
     """)
     cur.execute("""
@@ -38,16 +37,26 @@ def initiate():
             WHEN NEW.availablity <> OLD.availablity
         BEGIN
             INSERT INTO availabilitychange (id, availability_old, availability_new) VALUES (NEW.id, OLD.availablity, NEW.availablity);
+            UPDATE triggers SET processed = True WHERE id = NEW.id;
+        END;
+    """)
+    cur.execute("""
+        CREATE TRIGGER IF NOT EXISTS updateProcessed 
+            AFTER INSERT 
+            ON availabilitychange
+            WHEN NEW.processed = True
+        BEGIN
+            UPDATE triggers SET processed = True WHERE id = NEW.id;
         END;
     """)
     print('trigger(s) made')
     con.commit()
     con.close()
 
-def insert_addresses(id, address, lat, lon):
+def insert_addresses(id, address):
     con = sqlite3.connect('database.db')
     cur = con.cursor()
-    cur.execute("INSERT OR REPLACE INTO addresses VALUES (?,?,?,?)", (id, address, lat, lon,))
+    cur.execute("INSERT OR REPLACE INTO addresses VALUES (?,?)", (id, address, ))
     con.commit()
     con.close()
 
@@ -58,10 +67,13 @@ def insert_triggers(id, email):
     con.commit()
     con.close()
 
-def fetch_addresses():
+def fetch_addresses(id=None):
     con = sqlite3.connect('database.db')
     cur = con.cursor()
-    output = cur.execute('SELECT * FROM addresses').fetchall()
+    if id:
+        output = cur.execute('SELECT * FROM addresses WHERE id = ?', (id,)).fetchall()
+    else:
+        output = cur.execute('SELECT * FROM addresses').fetchall()
     con.close()
     return output
 
@@ -75,22 +87,37 @@ def insert_availability(id, availability):
     con.commit()
     con.close()
 
-def fetch_triggers(id=None):
+def fetch_triggers(id=None,):
     con = sqlite3.connect('database.db')
     cur = con.cursor()
     if id:
         output = cur.execute("""
-            SELECT * FROM triggers 
+            SELECT id, email, inserted_at, processed FROM triggers 
             WHERE id = ? 
+            AND inserted_at > datetime('now', '-4 hours')
             ORDER BY inserted_at 
             DESC LIMIT 100
         """, (id,)).fetchall()
     else:
         output = cur.execute("""
-            SELECT * FROM triggers 
+            SELECT id, email, inserted_at, processed FROM triggers 
+            WHERE inserted_at > datetime('now', '-4 hours')
             ORDER BY inserted_at DESC 
             LIMIT 100
         """).fetchall()
+    con.close()
+    return output
+
+def fetch_processed_triggers():
+    con = sqlite3.connect('database.db')
+    cur = con.cursor()
+    output = cur.execute("""
+        SELECT id, email, inserted_at, processed FROM triggers 
+        WHERE inserted_at > datetime('now', '-4 hours')
+        AND processed = True
+        ORDER BY inserted_at DESC 
+        LIMIT 100
+    """).fetchall()
     con.close()
     return output
 
@@ -107,12 +134,23 @@ def fetch_triggers_for_processing():
     con.close()
     return output
 
-def fetch_became_available():
+def fetch_became_available(processed=None):
     con = sqlite3.connect('database.db')
     cur = con.cursor()
-    output = cur.execute('SELECT * FROM availabilitychange').fetchall()
+    if processed == None:
+        output = cur.execute("SELECT * FROM availabilitychange WHERE inserted_at > datetime('now', '-4 hours')").fetchall()
+    if processed == False:
+        output = cur.execute("SELECT * FROM availabilitychange WHERE inserted_at > datetime('now', '-4 hours') AND processed = False").fetchall()
+    else:
+        output = cur.execute("SELECT * FROM availabilitychange WHERE inserted_at > datetime('now', '-4 hours') AND processed = True").fetchall()
     con.close()
     return output
+
+def update_availabilitychange(id):
+    con = sqlite3.connect('database.db')
+    cur = con.cursor()
+    cur.execute("UPDATE availabilitychange SET processed = True WHERE id = ?",(id,))
+    con.close()
 
 if __name__ == '__main__':
     initiate()

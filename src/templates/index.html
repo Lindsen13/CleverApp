@@ -1,35 +1,55 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="table-responsive">
-    <table class="table user-list">
-        <thead>
-            <tr>
-                <th class="text-center"><span>Id</span></th>
-                <th class="text-center"><span>Address</span></th>
-                <th class="text-center"><span>Lat</span></th>
-                <th class="text-center"><span>Lon</span></th>
-                <th class="text-center"><span>Subscribe</span></th>
-            </tr>
-        </thead>
-        <tbody>
-            <h1 class="text-center">Current Stock Overview</h1>
-            <br>
-            {% for address in addresses %}
-            <tr>
-                <td class="text-center">{{ address[0] }}<br></td>
-                <td class="text-center">{{ address[1] }}</td>
-                <td class="text-center">{{ address[2] }}</td>
-                <td class="text-center">{{ address[3] }}</td>
-                <td class="text-center">
-                    <span class="label label-default "><a href="/{{ address[0] }}">link</a></span>
-                </td>
-            </tr>
-            {% endfor %}
-            
-        </tbody>
-    </table>
+  <table class="table user-list" id="locationsTable">
+    <thead>
+      <tr>
+        <th class="text-center"><span>Subscribe</span></th>
+        <th class="text-center"><span>Address</span></th>
+      </tr>
+    </thead>
+    <tbody>
+      <h1 class="text-center">Clever Charger Subscription</h1>
+      <h4 class="text-center">Subscribe for a Clever charger and get notified when one comes available.</h4></br></br>
+      <p class="text-center">Keep in mind that we can only register a change if someone starts or stops charging.</br>
+        People who come and park at a Clever parking lot without plugging in their car, cannot be
+        tracked in the current setup.
+      </p></br>
+      <input type="text" class="form-control" id="tableSearch" onkeyup="myFunction()"
+        placeholder="Search for location..">
+      <br>
+      {% for address in addresses %}
+      <tr>
+        <td class="text-center">
+          <span class="label label-default "><a href="/{{ address[0] }}">link</a></span>
+        </td>
+        <td class="text-center">{{ address[1] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 {% endblock %}
+{% block scripts %}
+<script>
+  function myFunction() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("tableSearch");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("locationsTable");
+    tr = table.getElementsByTagName("tr");
 
-
-
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[1];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+</script>
+{% endblock %}
