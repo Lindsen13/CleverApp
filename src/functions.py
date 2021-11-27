@@ -18,21 +18,5 @@ def location_processor(full=False):
         )
         print(f'Inserted id {id}. {address=}')
 
-def process_triggers(id):
-    url = f'https://clever-app-prod.firebaseio.com/chargers/v2/availability/{id}.json'
-    output = requests.get(url)
-    if output.status_code == 200:
-        available = 0
-        if output.json() == None:
-            print(f'cant find {id=}')
-            available = 0
-        else:
-            print(output.json()['available'])
-            for type in output.json()['available'].keys():
-                for speed in ['regular','fast','ultra']:
-                    if output.json()['available'].get(type).get(speed):
-                        available += output.json()['available'].get(type).get(speed)
-            insert_availability(id = id, availability = available)
-
 if __name__ == '__main__':
     location_processor(full=True)

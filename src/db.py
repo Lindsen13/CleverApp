@@ -26,7 +26,7 @@ def initiate():
     cur.execute("""
         CREATE TABLE IF NOT EXISTS availability (
             id INTEGER PRIMARY KEY NOT NULL, 
-            availablity INTEGER NOT NULL,
+            availability INTEGER NOT NULL,
             inserted_at timestamp DEFAULT CURRENT_TIMESTAMP)
     """)
     cur.execute("""
@@ -38,6 +38,18 @@ def initiate():
             inserted_at timestamp DEFAULT CURRENT_TIMESTAMP)
     """)
     print('table(s) made')
+    cur.execute("""delimiter //""")
+    cur.execute("""
+        CREATE TRIGGER updateAvailability AFTER REPLACE ON availability
+        FOR EACH ROW
+        BEGIN
+            IF NEW.availability > OLD.availability THEN
+                INSERT INTO availabilitychange (id, availability_old, availability_new, processed) VALUES (NEW.id, OLD.availability, NEW.availability, FALSE);
+            END IF;
+        END
+    """)
+    cur.execute("""delimiter ;""")
+    print('trigger(s) made')
     con.commit()
     con.close()
 
@@ -66,16 +78,6 @@ def fetch_addresses(id=None):
         output = cur.fetchall()
     con.close()
     return output
-
-def insert_availability(id, availability):
-    con = create_con()
-    cur = con.cursor()
-    cur.execute("""
-            INSERT INTO availability (id, availablity) VALUES (%s,%s)
-            ON CONFLICT (id) DO UPDATE SET availablity = %s
-        """, (id, availability, availability))
-    con.commit()
-    con.close()
 
 def fetch_triggers(id=None,):
     con = create_con()
