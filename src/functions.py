@@ -32,7 +32,6 @@ def process_triggers(id):
                 for speed in ['regular','fast','ultra']:
                     if output.json()['available'].get(type).get(speed):
                         available += output.json()['available'].get(type).get(speed)
-            #available = 4
             insert_availability(id = id, availability = available)
 
 if __name__ == '__main__':
