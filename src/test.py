@@ -1,7 +1,6 @@
 from googleapiclient import discovery
 from oauth2client.client import GoogleCredentials
 
-
 def scheduler(enable=True):
     credentials = GoogleCredentials.get_application_default()
 
