@@ -3,6 +3,8 @@ import requests
 import mysql.connector 
 import os
 import logging
+from googleapiclient import discovery
+from oauth2client.client import GoogleCredentials
 
 logging.basicConfig(level=logging.INFO)
 
@@ -85,11 +87,40 @@ def update_users():
     con.close()
     return emails_list
 
+def scheduler(enable=True):
+    credentials = GoogleCredentials.get_application_default()
+
+    service = discovery.build('cloudscheduler', 'v1', credentials=credentials)
+    project = os.environ['GCP_PROJECT_ID']
+    location = os.environ['GCP_LOCATION']
+    scheduler = os.environ['GCP_CLOUD_SCHEDULER']
+    name = f"projects/{project}/locations/{location}/jobs/{scheduler}"
+
+    request = service.projects().locations().jobs().get(name=name)
+    response = request.execute()
+    if enable == True:
+        if response['state'] == 'ENABLED':
+            logging.info(f"State is {response['state']}. Not doing anything")
+        else:
+            logging.info("Resuming...")
+            request = service.projects().locations().jobs().resume(name=name)
+            response = request.execute()
+    elif enable == False:
+        if response['state'] == 'PAUSED.':
+            logging.info(f"State is {response['state']}. Not doing anything")
+        else:
+            logging.info("Pausing...")
+            request = service.projects().locations().jobs().pause(name=name)
+            response = request.execute()
+
 def main(request):
     start = datetime.datetime.now()
     logging.info(f"Getting started at {start}")
     logging.info("Getting all triggers...")
     triggers = fetch_triggers_for_processing()
+    if len(triggers) == 0:
+        scheduler(enable=False)
+        return {"Status":"completed","updated:":[],"notified:":0,"enabled":"Changed To Disable"}
     ids = []
     for trigger in triggers:
         logging.info(f"Process availability for trigger {trigger[0]}")
@@ -101,7 +132,7 @@ def main(request):
     logging.info(f"Finished at {end}")
     logging.info(f"Execution took {(end-start).total_seconds()}")
     logging.info("---Done Processing!---")
-    return {"Status":"completed","updated:":[ids],"notified:":len([emails])}
+    return {"Status":"completed","updated:":[ids],"notified:":len([emails]),"enabled":"Still enabled"}
 
 if __name__ == "__main__":
     main(request=False)
