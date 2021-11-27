@@ -1,6 +1,9 @@
 from googleapiclient import discovery
 from oauth2client.client import GoogleCredentials
 import os
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 def scheduler(enable=True):
     credentials = GoogleCredentials.get_application_default()
@@ -15,18 +18,18 @@ def scheduler(enable=True):
     response = request.execute()
     if enable == True:
         if response['state'] == 'ENABLED':
-            print(f"State is {response['state']}. Not doing anything")
+            logging.info(f"State is {response['state']}. Not doing anything")
         else:
-            print("Resuming...")
+            logging.info("Resuming...")
             request = service.projects().locations().jobs().resume(name=name)
             response = request.execute()
     elif enable == False:
         if response['state'] == 'PAUSED.':
-            print(f"State is {response['state']}. Not doing anything")
+            logging.info(f"State is {response['state']}. Not doing anything")
         else:
-            print("Pausing...")
+            logging.info("Pausing...")
             request = service.projects().locations().jobs().pause(name=name)
             response = request.execute()
 
 if __name__ == "__main__":
-    scheduler(enable=True)
+    scheduler(enable=False)

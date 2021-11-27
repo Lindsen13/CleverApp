@@ -1,5 +1,8 @@
 from db import insert_addresses
 import requests
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 def location_processor(full=False):
     url = 'https://clever-app-prod.firebaseio.com/chargers/v3/locations.json'
@@ -16,7 +19,7 @@ def location_processor(full=False):
             id = id,
             address = address
         )
-        print(f'Inserted id {id}. {address=}')
+        logging.info(f'Inserted id {id}. {address=}')
 
 if __name__ == '__main__':
     location_processor(full=True)

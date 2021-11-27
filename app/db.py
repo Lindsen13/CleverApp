@@ -1,5 +1,8 @@
 import mysql.connector
 import os
+import logging
+
+logging.basicConfig(level=logging.INFO)
 
 def create_con():
     return mysql.connector.connect(
@@ -37,7 +40,7 @@ def initiate():
             processed BOOLEAN DEFAULT FALSE,
             inserted_at timestamp DEFAULT CURRENT_TIMESTAMP)
     """)
-    print('table(s) made')
+    logging.info('table(s) made')
     cur.execute("""delimiter //""")
     cur.execute("""
         CREATE TRIGGER updateAvailability AFTER REPLACE ON availability
@@ -49,7 +52,7 @@ def initiate():
         END
     """)
     cur.execute("""delimiter ;""")
-    print('trigger(s) made')
+    logging.info('trigger(s) made')
     con.commit()
     con.close()
 

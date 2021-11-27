@@ -4,6 +4,8 @@ from db import fetch_addresses, \
     insert_triggers, \
     fetch_triggers
 
+from enable_scheduler import scheduler
+
 app = Flask(__name__)
 app.secret_key = b'MyAmazingSecretForCookies'
 
@@ -17,6 +19,7 @@ def insights_page(id):
     if request.method == 'POST':
         email = request.form['email']
         insert_triggers(id=id, email=email)
+        scheduler(enable=True)
         flash(f'You were successfully subscribed for charger {id}')
     triggers = fetch_triggers(id=id)
     address = fetch_addresses(id=id)
