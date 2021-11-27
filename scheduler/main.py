@@ -134,5 +134,6 @@ def main(request):
     logging.info("---Done Processing!---")
     return {"Status":"completed","updated:":[ids],"notified:":len([emails]),"enabled":"Still enabled"}
 
+
 if __name__ == "__main__":
     main(request=False)
