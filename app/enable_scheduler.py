@@ -1,12 +1,15 @@
 from googleapiclient import discovery
 from oauth2client.client import GoogleCredentials
+import os
 
 def scheduler(enable=True):
     credentials = GoogleCredentials.get_application_default()
 
     service = discovery.build('cloudscheduler', 'v1', credentials=credentials)
-
-    name = 'projects/clever-project-333313/locations/us-central1/jobs/runCleverSchedulers'
+    project = os.environ['GCP_PROJECT_ID']
+    location = os.environ['GCP_LOCATION']
+    scheduler = os.environ['GCP_CLOUD_SCHEDULER']
+    name = f"projects/{project}/locations/{location}/jobs/{scheduler}"
 
     request = service.projects().locations().jobs().get(name=name)
     response = request.execute()

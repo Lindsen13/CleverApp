@@ -1,4 +1,4 @@
-from db import insert_availability, insert_addresses
+from db import insert_addresses
 import requests
 
 def location_processor(full=False):
