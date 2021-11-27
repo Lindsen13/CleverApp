@@ -8,7 +8,6 @@ def create_con():
         host=os.environ['SQL_HOST'], 
         database=os.environ['SQL_DATABASE'])
     
-
 def initiate():
     con = create_con()
     cur = con.cursor()
@@ -60,9 +59,11 @@ def fetch_addresses(id=None):
     con = create_con()
     cur = con.cursor()
     if id:
-        output = cur.execute('SELECT * FROM addresses WHERE id = %s', (id,)).fetchall()
+        cur.execute('SELECT * FROM addresses WHERE id = %s', (id,))
+        output = cur.fetchall()
     else:
-        output = cur.execute('SELECT * FROM addresses').fetchall()
+        cur.execute('SELECT * FROM addresses;')
+        output = cur.fetchall()
     con.close()
     return output
 
@@ -80,66 +81,24 @@ def fetch_triggers(id=None,):
     con = create_con()
     cur = con.cursor()
     if id:
-        output = cur.execute("""
+        cur.execute("""
             SELECT id, email, inserted_at, processed FROM triggers 
             WHERE id = %s 
-            AND inserted_at > datetime('now', '-4 hours')
+            AND inserted_at > NOW() - INTERVAL 4 HOUR
             ORDER BY inserted_at 
             DESC LIMIT 100
-        """, (id,)).fetchall()
+        """, (id,))
+        output = cur.fetchall()
     else:
-        output = cur.execute("""
+        cur.execute("""
             SELECT id, email, inserted_at, processed FROM triggers 
-            WHERE inserted_at > datetime('now', '-4 hours')
+            WHERE inserted_at > NOW() - INTERVAL 4 HOUR
             ORDER BY inserted_at DESC 
             LIMIT 100
-        """).fetchall()
+        """)
+        output = cur.fetchall()
     con.close()
     return output
-
-def fetch_processed_triggers():
-    con = create_con()
-    cur = con.cursor()
-    output = cur.execute("""
-        SELECT id, email, inserted_at, processed FROM triggers 
-        WHERE inserted_at > datetime('now', '-4 hours')
-        AND processed = True
-        ORDER BY inserted_at DESC 
-        LIMIT 100
-    """).fetchall()
-    con.close()
-    return output
-
-def fetch_triggers_for_processing():
-    con = create_con()
-    cur = con.cursor()
-    output = cur.execute("""
-        SELECT t.id, a.availablity FROM triggers t
-        LEFT JOIN availability a ON t.id = a.id
-        WHERE t.inserted_at > datetime('now', '-4 hours')
-        GROUP BY t.id, a.availablity
-        ORDER BY t.inserted_at DESC 
-    """).fetchall()
-    con.close()
-    return output
-
-def fetch_became_available(processed=None):
-    con = create_con()
-    cur = con.cursor()
-    if processed == None:
-        output = cur.execute("SELECT * FROM availabilitychange WHERE inserted_at > datetime('now', '-4 hours')").fetchall()
-    if processed == False:
-        output = cur.execute("SELECT * FROM availabilitychange WHERE inserted_at > datetime('now', '-4 hours') AND processed = False").fetchall()
-    else:
-        output = cur.execute("SELECT * FROM availabilitychange WHERE inserted_at > datetime('now', '-4 hours') AND processed = True").fetchall()
-    con.close()
-    return output
-
-def update_availabilitychange(id):
-    con = create_con()
-    cur = con.cursor()
-    cur.execute("UPDATE availabilitychange SET processed = True WHERE id = %s",(id,))
-    con.close()
 
 if __name__ == '__main__':
     initiate()
