@@ -5,12 +5,19 @@ on:
     branches:
     - 'main'
     paths:
-    - 'function/**'
+    - 'scheduler/**'
 
 jobs:
-  hello-world:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Hello world
-        run: echo Hello world
+      - uses: actions/checkout@v2
+      - id: deploy
+        uses: google-github-actions/deploy-cloud-functions@main
+        with:
+          name: CleverApp_Scheduler
+          runtime: python38
+          credentials: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY_FILE }}
+          entry_point: main
+          source_dir: scheduler
+          env_vars: SQL_USER=${{ secrets.SQL_USER }},SQL_PASSWORD=${{ secrets.SQL_PASSWORD }},SQL_HOST=${{ secrets.SQL_HOST }},SQL_DATABASE=${{ secrets.SQL_DATABASE }}
