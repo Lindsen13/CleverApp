@@ -36,15 +36,14 @@ def process_current_availability(id):
     if output.status_code == 200:
         available = 0
         if output.json() == None:
-            print(f'cant find {id=}')
+            logging.info(f'cant find {id=}')
             available = 0
         else:
-            print(output.json()['available'])
+            logging.info(output.json()['available'])
             for type in output.json()['available'].keys():
                 for speed in ['regular','fast','ultra']:
                     if output.json()['available'].get(type).get(speed):
                         available += output.json()['available'].get(type).get(speed)
-            logging.info(f"Inserting {available=} for {id=}")
             insert_availability(id = id, availability = available)
 
 def insert_availability(id, availability):
