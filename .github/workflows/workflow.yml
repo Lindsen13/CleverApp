@@ -21,8 +21,8 @@ jobs:
           entry_point: main
           source_dir: scheduler
           env_vars: SQL_USER=${{ secrets.SQL_USER }},
-            SQL_PASSWORD=${{ secrets.SQL_PASSWORD }},
-            SQL_HOST=${{ secrets.SQL_HOST }},
-            GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }},
-            GCP_LOCATION=${{ secrets.GCP_LOCATION }},
-            GCP_CLOUD_SCHEDULER=${{ secrets.GCP_CLOUD_SCHEDULER }}
+          SQL_PASSWORD=${{ secrets.SQL_PASSWORD }},
+          SQL_HOST=${{ secrets.SQL_HOST }},
+          GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }},
+          GCP_LOCATION=${{ secrets.GCP_LOCATION }},
+          GCP_CLOUD_SCHEDULER=${{ secrets.GCP_CLOUD_SCHEDULER }}
