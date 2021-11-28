@@ -49,7 +49,7 @@ def process_current_availability(id):
 def insert_availability(id, availability):
     con = create_con()
     cur = con.cursor()
-    logging.info(f"Inserting {availability=} for {id=}")
+    logging.info(f"Inserting {availability=} for {id=}.")
     cur.execute("""
             INSERT INTO availability (id, availability) VALUES (%s,%s)
             ON DUPLICATE KEY UPDATE availability = %s
