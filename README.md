@@ -55,5 +55,6 @@ python3 functions.py
 #--currently done with github workflow when pushed to 'main' branch
 
 #Run the flask app
+cd app
 flask run
 ```
