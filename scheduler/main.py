@@ -62,16 +62,15 @@ def send_email(to="ivo.lindsen@hotmail.com",subject="This is a test - subject", 
     user = os.environ['GMAIL_MAIL']
     password = os.environ['GMAIL_PASSWORD']
     email_text = f"From: {user}\nTo: {to}\nSubject: {subject}\n\n{body}"
-    try:
-        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
-        server.ehlo()
-        server.login(user, password)
-        server.sendmail(user, to, email_text)
-        server.close()
-
-        print('Email sent!')
-    except:
-        print('Something went wrong...')
+    #try:
+    server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+    server.ehlo()
+    server.login(user, password)
+    server.sendmail(user, to, email_text)
+    server.close()
+    print('Email sent!')
+#except:
+    #    print('Something went wrong...')
         
 def update_users():
     con = create_con()
