@@ -61,16 +61,27 @@ def insert_availability(id, availability):
 def send_email(to="ivo.lindsen@hotmail.com",subject="This is a test - subject", body="This is a test - body"):
     user = os.environ['GMAIL_MAIL']
     password = os.environ['GMAIL_PASSWORD']
+
+    chars = [
+        {'æ':'ae'},
+        {'Æ':'AE'},
+        {'å':'a'},
+        {'Å':'A'},
+        {'œ':'oe'},
+        {'Œ':'Oe'},
+        {'ø':'o'},
+        {'Ø':'O'},
+    ]
+    for char in chars:
+        subject = subject.replace(list(char.keys())[0],list(char.values())[0])
+        body = body.replace(list(char.keys())[0],list(char.values())[0])
+        
     email_text = f"From: {user}\nTo: {to}\nSubject: {subject}\n\n{body}"
-    #try:
     server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
     server.ehlo()
     server.login(user, password)
     server.sendmail(user, to, email_text)
     server.close()
-    print('Email sent!')
-#except:
-    #    print('Something went wrong...')
         
 def update_users():
     con = create_con()
