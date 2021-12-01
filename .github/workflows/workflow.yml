@@ -20,4 +20,4 @@ jobs:
           credentials: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
           entry_point: main
           source_dir: scheduler
-          env_vars: SQL_USER=${{ secrets.SQL_USER }},SQL_PASSWORD=${{ secrets.SQL_PASSWORD }},SQL_HOST=${{ secrets.SQL_HOST }},SQL_DATABASE=${{ secrets.SQL_DATABASE }},GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }},GCP_LOCATION=${{ secrets.GCP_LOCATION }},GCP_CLOUD_SCHEDULER=${{ secrets.GCP_CLOUD_SCHEDULER }}
+          env_vars: SQL_USER=${{ secrets.SQL_USER }},SQL_PASSWORD=${{ secrets.SQL_PASSWORD }},SQL_HOST=${{ secrets.SQL_HOST }},SQL_DATABASE=${{ secrets.SQL_DATABASE }},GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }},GCP_LOCATION=${{ secrets.GCP_LOCATION }},GCP_CLOUD_SCHEDULER=${{ secrets.GCP_CLOUD_SCHEDULER }},GMAIL_MAIL=${{ secrets.GMAIL_MAIL }},GMAIL_PASSWORD=${{ secrets.GMAIL_PASSWORD }}

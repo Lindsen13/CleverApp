@@ -2,8 +2,8 @@ from flask import Flask, render_template, request, flash
 
 from db import fetch_addresses, \
     insert_triggers, \
-    fetch_triggers
-
+    fetch_triggers, \
+    fetch_availability
 from enable_scheduler import scheduler
 
 app = Flask(__name__)
@@ -23,7 +23,8 @@ def insights_page(id):
         flash(f'You were successfully subscribed for charger {id}')
     triggers = fetch_triggers(id=id)
     address = fetch_addresses(id=id)
-    return render_template('triggers.html', id=id, triggers = triggers, address=address)
+    available = fetch_availability(id)
+    return render_template('triggers.html', id=id, triggers = triggers, address=address, available=available)
 
 if __name__ == '__main__':
     app.run(debug=True)

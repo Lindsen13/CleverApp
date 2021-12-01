@@ -1,3 +1,4 @@
+import smtplib
 import datetime
 import requests
 import mysql.connector 
@@ -49,7 +50,7 @@ def process_current_availability(id):
 def insert_availability(id, availability):
     con = create_con()
     cur = con.cursor()
-    logging.info(f"Inserting {availability=} for {id=}.")
+    logging.info(f"Inserting {availability=} for {id=}")
     cur.execute("""
             INSERT INTO availability (id, availability) VALUES (%s,%s)
             ON DUPLICATE KEY UPDATE availability = %s
@@ -57,6 +58,21 @@ def insert_availability(id, availability):
     con.commit()
     con.close()
 
+def send_email(to="ivo.lindsen@hotmail.com",subject="This is a test - subject", body="This is a test - body"):
+    user = os.environ['GMAIL_MAIL']
+    password = os.environ['GMAIL_PASSWORD']
+    email_text = f"From: {user}\nTo: {to}\nSubject: {subject}\n\n{body}"
+    try:
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server.ehlo()
+        server.login(user, password)
+        server.sendmail(user, to, email_text)
+        server.close()
+
+        print('Email sent!')
+    except:
+        print('Something went wrong...')
+        
 def update_users():
     con = create_con()
     cur = con.cursor()
@@ -78,6 +94,11 @@ def update_users():
         logging.info(f"Reaching out to {len(emails)} people")
         for email in emails:
             logging.info(f'Sending email to {email[0]} about address {email[1]} (id={email[2]})')
+            send_email(
+                to=email[0],
+                subject=f"Clever charging spot {email[1]} came available!",
+                body=f"Clever charging spot {email[1]} came available! Thanks for using my tool :-)"
+            )
             logging.info("Updated triggers and availabilityChange")
             cur.execute("UPDATE triggers set processed = True WHERE id = %s", (email[2],))
             cur.execute("UPDATE availabilitychange set processed = True WHERE id = %s", (email[2],))

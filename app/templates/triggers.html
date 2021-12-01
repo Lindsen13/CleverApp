@@ -23,6 +23,15 @@
           <input type="email" class="form-control" id="email" name="email" placeholder="Email" required><br>
           <input type="submit" value="Submit">
         </form>
+      <div class="text-center">
+        <p>
+          {% if available is not none %}   
+            Currently available: {{ available }}
+          {% else %}
+            Currently available: Unknown - subscribe to find out!
+          {% endif %}
+        </p>
+      </div>
       </div>
       <h3 class="text-center">Current Subscriptions for this charger in last 24 hours</h3>
       <br>

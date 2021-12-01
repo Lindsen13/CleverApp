@@ -105,6 +105,24 @@ def fetch_triggers(id=None,):
     con.close()
     return output
 
+def fetch_availability(id):
+    con = create_con()
+    cur = con.cursor()
+    cur.execute("""
+        SELECT availability FROM availability 
+        WHERE id = %s 
+        ORDER BY inserted_at  DESC
+        LIMIT 1
+    """, (id,))
+    output = cur.fetchall()
+    con.close()
+    if len(output) == 0:
+        return None
+    else:
+        return output[0][0]
+
+
+
 if __name__ == '__main__':
     initiate()
     
