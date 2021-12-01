@@ -111,6 +111,7 @@ def fetch_availability(id):
     cur.execute("""
         SELECT availability FROM availability 
         WHERE id = %s 
+        AND TIMESTAMPDIFF(MINUTE,inserted_at,NOW()) < 15
         ORDER BY inserted_at  DESC
         LIMIT 1
     """, (id,))
