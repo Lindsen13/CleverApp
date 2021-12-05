@@ -1,3 +1,4 @@
+import os
 from flask import Flask, render_template, request, flash
 
 from db import fetch_addresses, \
@@ -27,4 +28,5 @@ def insights_page(id):
     return render_template('triggers.html', id=id, triggers = triggers, address=address, available=available)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    #app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
