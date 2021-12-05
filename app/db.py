@@ -122,8 +122,6 @@ def fetch_availability(id):
     else:
         return output[0][0]
 
-
-
 if __name__ == '__main__':
     initiate()
     
