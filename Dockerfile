@@ -2,6 +2,9 @@
 # https://hub.docker.com/_/python
 FROM python:3.9-slim
 
+# Added myself: updating PIP
+RUN pip install --upgrade pip
+
 # Allow statements and log messages to immediately appear in the Knative logs
 ENV PYTHONUNBUFFERED True
 
